@@ -10,7 +10,7 @@ router.post('/register', async (req, res) => {
   user.password = hashedPW
   try {
     const newUser = await User.addUser(user)
-    res.status(201).json(user)
+    res.status(201).json({newUser, user})
   }
   catch(error) {
     res.status(500).json({message: "Could Not Register User", error: error})
@@ -21,7 +21,6 @@ router.post('/login', async (req, res) => {
   const {username, password} = req.body
   try {
     const user = await User.findUserBy({username}).first()
-    console.log(user)
     if(user && bcrypt.compareSync(password, user.password)) {
       const token = createToken(user)
       res.status(200).json({message: "Login Successful", token})
